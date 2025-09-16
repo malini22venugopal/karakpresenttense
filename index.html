@@ -3,53 +3,49 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>कारक प्रश्नावली — Level 2</title>
+  <title>कारक प्रश्नावली - Level 2</title>
   <style>
     body {
       font-family: "Noto Sans Devanagari", sans-serif;
-      background: #f6fbff;
+      background: #f9f7f1;
       margin: 0;
       padding: 20px;
-      color: #10323b;
     }
-    h1 { text-align: center; color: #0a5f4a; margin-bottom: 6px; }
-    p.lead { text-align:center; color:#2d6a63; margin-top:0; margin-bottom:18px; }
-
+    h1 { text-align: center; color: #0a5f4a; }
     .options-bank {
       background: #fff;
-      padding: 12px;
+      padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      margin-bottom: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
       text-align: center;
     }
     .options-bank span {
       display: inline-block;
-      background: #e9f7f4;
-      border: 1px solid #cfeee6;
+      background: #e6f3ef;
+      border: 1px solid #b5ddd2;
       color: #0a5f4a;
       padding: 6px 10px;
       margin: 5px;
       border-radius: 6px;
-      font-weight: 600;
+      font-weight: bold;
     }
     .question {
       background: #fff;
-      padding: 14px;
+      padding: 15px;
       border-radius: 8px;
-      margin-bottom: 14px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .question p { margin: 0 0 8px; font-size: 1.05rem; line-height:1.4; }
+    .question p { margin: 0 0 10px; font-size: 1.1rem; }
     select {
       padding: 6px;
       font-size: 1rem;
       margin-right: 8px;
-      border-radius:6px;
     }
     .explanation {
       margin-top: 10px;
-      padding: 10px;
+      padding: 8px;
       border-radius: 6px;
       background: #f3fff7;
       border: 1px dashed #b5ddd2;
@@ -60,36 +56,22 @@
       background: #0a5f4a;
       color: #fff;
       border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
+      padding: 10px 15px;
+      border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
       display: block;
-      margin: 18px auto;
-      box-shadow: 0 4px 10px rgba(10,95,74,0.12);
-    }
-    #resetBtn {
-      background: #ffffff;
-      color: #0a5f4a;
-      border: 1px solid #0a5f4a;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: block;
-      margin: 6px auto;
+      margin: 20px auto;
     }
     #result {
       margin-top: 20px;
-      padding: 14px;
-      border-radius: 10px;
-      background: #fffef8;
-      border: 1px solid #f0e7c9;
+      padding: 15px;
+      border-radius: 8px;
+      background: #f3fff7;
+      border: 1px solid #b5ddd2;
       display: none;
       text-align: center;
-      font-weight: 600;
     }
-
     /* Balloon celebration full page */
     .balloon-wrap {
       position: fixed;
@@ -105,7 +87,7 @@
     }
     .balloon {
       position: absolute;
-      bottom: -150px;
+      bottom: -100px;
       width: 60px;
       height: 80px;
       border-radius: 50% 50% 45% 45%;
@@ -114,79 +96,76 @@
       animation: rise linear forwards;
       box-shadow: 0 6px 12px rgba(0,0,0,0.12);
     }
-    .string {
+    .balloon::after {
+      content: "";
       position: absolute;
-      bottom: -180px;
-      width: 2px;
-      height: 120px;
-      background: rgba(0,0,0,0.12);
+      bottom: -12px;
       left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #555;
       transform: translateX(-50%);
-      border-radius: 2px;
     }
-
     @keyframes rise {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      100% { transform: translateY(-120vh) rotate(360deg); opacity: 1; }
-    }
-
-    @media (max-width:600px) {
-      .question p { font-size: 1rem; }
-      .balloon { width: 44px; height: 60px; }
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to { transform: translateY(-110vh) scale(1.1); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <h1>कारक प्रश्नावली — Level 2</h1>
-  <p class="lead">20 questions — simple present tense. English meaning shown in parentheses. (Score &gt; 16 = balloons!)</p>
+  <h1>कारक प्रश्नावली - Level 2</h1>
 
+  <!-- Word bank -->
   <div class="options-bank" id="optionsBank"></div>
+
+  <!-- Questions -->
   <div id="questions"></div>
 
   <button id="submitBtn">Submit</button>
-  <button id="resetBtn">Reset</button>
-
   <div id="result"></div>
+
+  <!-- Balloon Celebration -->
   <div class="balloon-wrap" id="balloonWrap"></div>
 
   <script>
-    const optionsBank = [
-      "को","से","में","के","अरे","के लिए","पर","के साथ","की","अपने","तक","के बाद","ऊपर"
-    ];
+    // Master options bank (added पर, तक, बाद, साथ, ऊपर for Level 2)
+    const optionsBank = ["से", "ने", "में", "के", "अरे", "के लिए", "को", "पर", "तक", "के बाद", "के साथ", "ऊपर"];
 
+    // 20 Questions in simple present tense
     const questions = [
-      { text: "राम ______ दोस्तों ______ खेलता है। (Ram plays with his friends.)", answers: ["अपने","के साथ"], explanation: "'अपने' = his, 'के साथ' = with." },
-      { text: "सीमा स्कूल ______ पढ़ती है और किताब ______ पढ़ती है। (Seema studies at school and reads from the book.)", answers: ["में","से"], explanation: "'में' = in/at, 'से' = from." },
-      { text: "पक्षी पेड़ ______ डाल ______ बैठता है। (The bird sits on the branch of the tree.)", answers: ["की","पर"], explanation: "'की' = of, 'पर' = on." },
-      { text: "माँ बच्चों ______ कहानी सुनाती है और उन्हें सोने ______ कहती है। (Mother tells a story to the children and tells them to sleep.)", answers: ["को","के लिए"], explanation: "'को' = to, 'के लिए' = for." },
-      { text: "लड़के नदी ______ पुल ______ चलते हैं। (The boys walk on the bridge over the river.)", answers: ["के","पर"], explanation: "'के' links, 'पर' = on." },
-      { text: "वह डॉक्टर रोगी ______ दवा देता है। (He gives medicine to the patient.)", answers: ["को"], explanation: "'को' = to (patient)." },
-      { text: "स्कूल सुबह ______ खुलता है। (The school opens in the morning.)", answers: ["में"], explanation: "'में' = in (time)." },
-      { text: "किताब मेज़ ______ रखी है। (The book is kept on the table.)", answers: ["पर"], explanation: "'पर' = on." },
-      { text: "बच्चा पिता ______ पत्र लिखता है। (The child writes a letter to his father.)", answers: ["को"], explanation: "'को' = to (father)." },
-      { text: "मैं बस ______ ऑफिस जाता हूँ। (I go to the office by bus.)", answers: ["से"], explanation: "'से' = by/with (bus)." },
-      { text: "तुम मेरे घर ______ कब आओगे? (When will you come to my house?)", answers: ["पर"], explanation: "'पर' = to/at." },
-      { text: "हम शाम ______ पार्क में टहलते हैं। (We walk in the park in the evening.)", answers: ["में"], explanation: "'में' = in (time/place)." },
-      { text: "बॉस कर्मचारीयों ______ प्रोत्साहित करता है। (The boss encourages the employees.)", answers: ["को"], explanation: "'को' = to/for." },
-      { text: "छात्र गुरुजी ______ प्रश्न पूछते हैं। (The students ask questions to the teacher.)", answers: ["से"], explanation: "'से' = from/to (teacher)." },
-      { text: "वह रेलवे स्टेशन ______ घर ______ चलता है। (He walks home from the railway station.)", answers: ["से","पर"], explanation: "'से' = from, 'पर' = to/at." },
-      { text: "नीरज परीक्षा ______ अच्छे अंक पाता है। (Neeraj gets good marks in the exam.)", answers: ["में"], explanation: "'में' = in (exam)." },
-      { text: "लता अपनी माँ ______ मदद करती है। (Lata helps her mother.)", answers: ["की"], explanation: "'की' = of (help of mother)." },
-      { text: "नदी पहाड़ ______ निकलती है। (The river comes out of the mountain.)", answers: ["से"], explanation: "'से' = from (mountain)." },
-      { text: "विद्यार्थी किताब ______ पढ़ता है। (The student reads from the book.)", answers: ["से"], explanation: "'से' = from (book)." },
-      { text: "सीता बाजार ______ सब्ज़ी खरीदती है। (Sita buys vegetables from the market.)", answers: ["से"], explanation: "'से' = from (market)." }
+      { text: "माँ कुत्ते ______ भोजन देती है। (The mother gives food to the dog.)", answers: ["को"], explanation: "'को' marks the recipient of the action: the mother gives food to the dog." },
+      { text: "पेड़ ______ पत्ते गिरते हैं। (Leaves fall from the tree.)", answers: ["से"], explanation: "'से' shows origin: leaves fall from the tree." },
+      { text: "सूर्य दिन ______ निकलता है। (The sun rises in the day.)", answers: ["में"], explanation: "'में' shows time: in the day." },
+      { text: "बिल ______ साँप निकलता है। (A snake comes out of the hole.)", answers: ["से"], explanation: "'से' indicates source/origin: from the hole." },
+      { text: "दादाजी आमिर ______ पतंग लाते हैं। (Grandfather brings a kite for Amir.)", answers: ["के लिए"], explanation: "'के लिए' shows beneficiary: for Amir." },
+      { text: "रानी ______ हाथ ______ किताब गिराती है। (The book falls from Rani's hand.)", answers: ["के", "से"], explanation: "'के हाथ से' = from the hand of Rani." },
+      { text: "पंकज अपने भाई ______ मिठाई लाता है। (Pankaj brings sweets for his brother.)", answers: ["के लिए"], explanation: "'के लिए' = for someone: for his brother." },
+      { text: "आसमान ______ पानी बरसता है। (Water rains from the sky.)", answers: ["से"], explanation: "'से' = from the sky." },
+      { text: "मनोेज कलम ______ लिखता है। (Manoj writes with a pen.)", answers: ["से"], explanation: "'से' marks the instrument/tool: with a pen." },
+      { text: "______! तुम कब आते हो। (Hey! When do you come?)", answers: ["अरे"], explanation: "'अरे' is an interjection: Hey!" },
+      { text: "रवि ______ क्रिकेट मैच देखता है। (Ravi watches the cricket match.)", answers: ["ने"], explanation: "'ने' marks the subject/agent: Ravi." },
+      { text: "छत ______ ऊपर बच्चा खड़ा है। (A child stands on top of the roof.)", answers: ["के"], explanation: "'के ऊपर' indicates location: on top of." },
+      { text: "बच्चा गिलास ______ दूध पीता है। (The child drinks milk with a glass.)", answers: ["से"], explanation: "'से' shows instrument: with a glass." },
+      { text: "लड़का गुरुजी ______ पढ़ता है। (The boy studies from the teacher.)", answers: ["से"], explanation: "'से' shows source: from the teacher." },
+      { text: "रीमा सहेली ______ पत्र लिखती है। (Reema writes a letter to her friend.)", answers: ["को"], explanation: "'को' = to someone: to her friend." },
+      { text: "पक्षी पेड़ ______ बैठता है। (The bird sits on the tree.)", answers: ["पर"], explanation: "'पर' = on: on the tree." },
+      { text: "लता माँ ______ घर साफ करती है। (Lata cleans the house for her mother.)", answers: ["के लिए"], explanation: "'के लिए' = for someone: for her mother." },
+      { text: "नदी पहाड़ ______ निकलती है। (The river comes out of the mountain.)", answers: ["से"], explanation: "'से' = from: from the mountain." },
+      { text: "विद्यार्थी किताब ______ पढ़ता है। (The student reads from the book.)", answers: ["से"], explanation: "'से' = medium: from the book." },
+      { text: "राम ______ दोस्तों ______ खेलता है। (Ram plays with his friends.)", answers: ["अपने", "के साथ"], explanation: "'के साथ' = with someone: with his friends." }
     ];
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
+    // Shuffle questions order
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return array;
+      return arr;
     }
-    let shuffledQuestions = shuffle([...questions]);
+    shuffleArray(questions);
 
+    // Render options bank
     const optionsBankDiv = document.getElementById("optionsBank");
     optionsBank.forEach(opt => {
       const span = document.createElement("span");
@@ -194,64 +173,63 @@
       optionsBankDiv.appendChild(span);
     });
 
-    function renderQuestions() {
-      const questionsDiv = document.getElementById("questions");
-      questionsDiv.innerHTML = "";
-      shuffledQuestions.forEach((q, i) => {
-        const div = document.createElement("div");
-        div.className = "question";
-        let parts = q.text.split("______");
-        let html = `<p>Question ${i + 1}: `;
-        parts.forEach((part, idx) => {
-          html += part;
-          if (idx < q.answers.length) {
-            html += `<select id="q${i}_${idx}">
-                       <option value="">-- Select an option --</option>
-                       ${optionsBank.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
-                     </select>`;
-          }
-        });
-        html += `</p><div class="explanation" id="exp${i}"></div>`;
-        div.innerHTML = html;
-        questionsDiv.appendChild(div);
-      });
-    }
-    renderQuestions();
+    // Render questions
+    const questionsDiv = document.getElementById("questions");
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
 
+      let parts = q.text.split("______");
+      let html = `<p>Question ${i + 1}: `;
+      parts.forEach((part, idx) => {
+        html += part;
+        if (idx < q.answers.length) {
+          html += `<select id="q${i}_${idx}">
+                     <option value="">-- Select --</option>
+                     ${optionsBank.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+                   </select>`;
+        }
+      });
+      html += "</p>";
+      html += `<div class="explanation" id="exp${i}"></div>`;
+
+      div.innerHTML = html;
+      questionsDiv.appendChild(div);
+    });
+
+    // Balloon celebration
     function showBalloons() {
       const wrap = document.getElementById('balloonWrap');
       wrap.innerHTML = '';
       wrap.style.display = 'block';
       const colors = ['#ff6b6b','#ffb86b','#6bd5ff','#8affc1','#d89bff','#ffd1f0'];
-      const count = 20;
+      const count = 25;
       for (let i = 0; i < count; i++) {
         const b = document.createElement('div');
         b.className = 'balloon';
         const size = 40 + Math.random() * 40;
         b.style.width = size + 'px';
-        b.style.height = (size * 1.2) + 'px';
+        b.style.height = (size * 1.3) + 'px';
         b.style.left = (Math.random() * 100) + 'vw';
         b.style.background = colors[Math.floor(Math.random() * colors.length)];
-        b.style.animationDuration = (6 + Math.random() * 6).toFixed(2) + 's';
-        b.style.bottom = (-200 - Math.random() * 80) + 'px';
-        const s = document.createElement('div');
-        s.className = 'string';
-        b.appendChild(s);
+        b.style.animationDuration = (8 + Math.random() * 6).toFixed(2) + 's';
+        b.style.animationDelay = (Math.random() * 2).toFixed(2) + 's';
         wrap.appendChild(b);
       }
-      setTimeout(() => { wrap.style.display = 'none'; wrap.innerHTML = ''; }, 9000);
+      setTimeout(() => { wrap.style.display = 'none'; wrap.innerHTML = ''; }, 12000);
     }
 
+    // Evaluate answers
     document.getElementById("submitBtn").addEventListener("click", () => {
       let score = 0;
-      shuffledQuestions.forEach((q, i) => {
+      questions.forEach((q, i) => {
         let correct = true;
         q.answers.forEach((ans, idx) => {
           const selected = document.getElementById(`q${i}_${idx}`).value;
           if (selected !== ans) correct = false;
         });
         const expDiv = document.getElementById(`exp${i}`);
-        expDiv.style.display = 'block';
+        expDiv.style.display = "block";
         if (correct) {
           score++;
           expDiv.innerHTML = `✔️ Correct Answer: ${q.answers.join(", ")}<br>💡 Explanation: ${q.explanation}`;
@@ -260,20 +238,12 @@
           expDiv.innerHTML = `❌ Your Answer: ${chosen}<br>✔️ Correct Answer: ${q.answers.join(", ")}<br>💡 Explanation: ${q.explanation}`;
         }
       });
-
       const resultDiv = document.getElementById("result");
       resultDiv.style.display = "block";
-      resultDiv.innerHTML = `<h3>Your Score: ${score}/${shuffledQuestions.length}</h3>`;
-      if (score > 16) showBalloons();
-    });
-
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      document.querySelectorAll("select").forEach(s => s.selectedIndex = 0);
-      document.querySelectorAll(".explanation").forEach(e => { e.style.display = 'none'; e.innerHTML = ''; });
-      document.getElementById("result").style.display = "none";
-      document.getElementById("balloonWrap").style.display = "none";
-      shuffledQuestions = shuffle([...questions]);
-      renderQuestions();
+      resultDiv.innerHTML = `<h3>Your Score: ${score}/${questions.length}</h3>`;
+      if (score > 16) {
+        showBalloons();
+      }
     });
   </script>
 </body>
