@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>कारक प्रश्नावली</title>
+  <style>
+    body {
+      font-family: "Noto Sans Devanagari", sans-serif;
+      background: #f9f7f1;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { text-align: center; color: #0a5f4a; }
+    .options-bank {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .options-bank span {
+      display: inline-block;
+      background: #e6f3ef;
+      border: 1px solid #b5ddd2;
+      color: #0a5f4a;
+      padding: 6px 10px;
+      margin: 5px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .question {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .question p { margin: 0 0 10px; font-size: 1.1rem; }
+    select {
+      padding: 6px;
+      font-size: 1rem;
+      margin-right: 8px;
+    }
+    .explanation {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      background: #f3fff7;
+      border: 1px dashed #b5ddd2;
+      display: none;
+      font-size: 0.95rem;
+    }
+    #submitBtn {
+      background: #0a5f4a;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #f3fff7;
+      border: 1px solid #b5ddd2;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>कारक प्रश्नावली</h1>
+
+  <!-- Word bank -->
+  <div class="options-bank" id="optionsBank"></div>
+
+  <!-- Questions -->
+  <div id="questions"></div>
+
+  <button id="submitBtn">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // Master options bank
+    const optionsBank = ["से", "ने", "में", "के", "अरे", "के लिए", "को", "पर"];
+
+    // All questions (20 total)
+    const questions = [
+      { text: "माँ कुत्ते ______ भोजन देती है। (The mother gives food to the dog.)", answers: ["को"], explanation: "'को' marks the recipient: the mother gives food to the dog." },
+      { text: "पेड़ ______ पत्ता गिरता है। (The leaf falls from the tree.)", answers: ["से"], explanation: "'से' shows origin: the leaf falls from the tree." },
+      { text: "सूर्य दिन ______ निकलता है। (The sun rises in the day.)", answers: ["में"], explanation: "'में' indicates time: in the day." },
+      { text: "बिल ______ साँप रहता है। (A snake lives in the hole.)", answers: ["में"], explanation: "'में' shows location: in the hole." },
+      { text: "दादाजी आमिर ______ पतंग लाते हैं। (Grandfather brings a kite for Amir.)", answers: ["के लिए"], explanation: "'के लिए' shows beneficiary: for Amir." },
+      { text: "रानी ______ हाथ ______ टॉर्च गिरती है। (The torch falls from Rani’s hand.)", answers: ["के", "से"], explanation: "'के हाथ से' = from the hand of Rani, showing source." },
+      { text: "पंकज अपने छोटे भाई ______ चॉकलेट लाता है। (Pankaj brings chocolate for his younger brother.)", answers: ["के लिए"], explanation: "'के लिए' shows beneficiary: for his brother." },
+      { text: "आसमान ______ बूंदें टपकती हैं। (Drops fall from the sky.)", answers: ["से"], explanation: "'से' indicates source: from the sky." },
+      { text: "मनोेज कलम ______ लिखता है। (Manoj writes with a pen.)", answers: ["से"], explanation: "'से' shows instrument: with a pen." },
+      { text: "______! तुम कब आते हो। (Hey! When do you come?)", answers: ["अरे"], explanation: "'अरे' is an interjection showing surprise." },
+      { text: "रवि ______ क्रिकेट मैच देखता है। (Ravi watches the cricket match.)", answers: ["ने"], explanation: "'ने' marks the doer: Ravi watched the match." },
+      { text: "छत ______ ऊपर बच्चा खड़ा है। (A child is standing on top of the roof.)", answers: ["के"], explanation: "'के ऊपर' shows position: on top of." },
+
+      // Extra questions
+      { text: "बच्चा गिलास ______ दूध पीता है। (The child drinks milk with a glass.)", answers: ["से"], explanation: "'से' shows instrument/tool: with a glass." },
+      { text: "लड़का गुरुजी ______ पढ़ता है। (The boy studies from the teacher.)", answers: ["से"], explanation: "'से' shows source: from the teacher." },
+      { text: "रीमा अपनी सहेली ______ पत्र लिखती है। (Reema writes a letter to her friend.)", answers: ["को"], explanation: "'को' marks recipient: to her friend." },
+      { text: "पक्षी पेड़ ______ बैठता है। (The bird sits on the tree.)", answers: ["पर"], explanation: "'पर' indicates position: on the tree." },
+      { text: "लता माँ ______ घर साफ करती है। (Lata cleans the house for her mother.)", answers: ["के लिए"], explanation: "'के लिए' shows beneficiary: for her mother." },
+      { text: "नदी पहाड़ ______ निकलती है। (The river comes out of the mountain.)", answers: ["से"], explanation: "'से' shows origin: from the mountain." },
+      { text: "विद्यार्थी किताब ______ पढ़ता है। (The student reads from the book.)", answers: ["से"], explanation: "'से' shows medium: from the book." },
+      { text: "सीता बाजार ______ सब्ज़ी खरीदती है। (Sita buys vegetables from the market.)", answers: ["से"], explanation: "'से' shows source/place of purchase: from the market." }
+    ];
+
+    // Shuffle questions
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    const shuffledQuestions = shuffle([...questions]);
+
+    // Render options bank
+    const optionsBankDiv = document.getElementById("optionsBank");
+    optionsBank.forEach(opt => {
+      const span = document.createElement("span");
+      span.textContent = opt;
+      optionsBankDiv.appendChild(span);
+    });
+
+    // Render questions
+    const questionsDiv = document.getElementById("questions");
+    shuffledQuestions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
+
+      // Build question text + dropdowns for blanks
+      let parts = q.text.split("______");
+      let html = `<p>Question ${i + 1}: `;
+      parts.forEach((part, idx) => {
+        html += part;
+        if (idx < q.answers.length) {
+          html += `<select id="q${i}_${idx}">
+                     <option value="">-- Select an option --</option>
+                     ${optionsBank.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+                   </select>`;
+        }
+      });
+      html += "</p>";
+      html += `<div class="explanation" id="exp${i}"></div>`;
+
+      div.innerHTML = html;
+      questionsDiv.appendChild(div);
+    });
+
+    // Evaluate answers
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      let score = 0;
+      shuffledQuestions.forEach((q, i) => {
+        let correct = true;
+        q.answers.forEach((ans, idx) => {
+          const selected = document.getElementById(`q${i}_${idx}`).value;
+          if (selected !== ans) correct = false;
+        });
+        const expDiv = document.getElementById(`exp${i}`);
+        expDiv.style.display = "block";
+        if (correct) {
+          score++;
+          expDiv.innerHTML = `✔️ Correct Answer: ${q.answers.join(", ")}<br>💡 Explanation: ${q.explanation}`;
+        } else {
+          let chosen = q.answers.map((_, idx) => document.getElementById(`q${i}_${idx}`).value || "None").join(", ");
+          expDiv.innerHTML = `❌ Your Answer: ${chosen}<br>✔️ Correct Answer: ${q.answers.join(", ")}<br>💡 Explanation: ${q.explanation}`;
+        }
+      });
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = `<h3>Your Score: ${score}/${shuffledQuestions.length}</h3>`;
+    });
+  </script>
+</body>
+</html>
